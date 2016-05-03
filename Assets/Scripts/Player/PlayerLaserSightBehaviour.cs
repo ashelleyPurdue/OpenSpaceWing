@@ -8,6 +8,10 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
     public const float FORWARD_OFFSET = 0.01f;
 
 
+    //Global settings
+    public static bool enableHitCrosshair = false;
+
+
     //References
     public PlayerGunBehaviour gun;
     public Transform hitCrosshair;
@@ -39,6 +43,7 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
         aimCrosshair.position = gun.AimPoint + gun.AimPointNormal * FORWARD_OFFSET;
 
         //Update the hit crosshair
+        hitCrosshair.GetComponent<SpriteRenderer>().enabled = enableHitCrosshair;
         UpdateHitCrosshair();
     }
 
@@ -57,7 +62,9 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
 
         //Find the point where the bullet would *actually* hit when fired.
         Vector3 bulletDir = (gun.AimPoint - gun.transform.position).normalized;
-        RaycastHit[] hits = Physics.RaycastAll(gun.transform.position, bulletDir, Vector3.Distance(gun.AimPoint, gun.transform.position));
+        float aimpointDist = Vector3.Distance(gun.AimPoint, gun.transform.position);
+
+        RaycastHit[] hits = Physics.RaycastAll(gun.transform.position, bulletDir, aimpointDist);
 
         bool foundHit = false;
         RaycastHit closestHit = new RaycastHit();
@@ -82,9 +89,9 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
         }
         else
         {
-            //If no point was found(IE: player aiming off into the distance), use the aim point
-            hitCrosshair.forward = gun.AimPointNormal * -1;
-            hitCrosshair.position = gun.AimPoint + gun.AimPointNormal * FORWARD_OFFSET;
+            //If no point was found(IE: player aiming off into the distance), go half-way between the gun and the aim point
+            hitCrosshair.forward = (gun.AimPoint - gun.transform.position).normalized * -1;
+            hitCrosshair.position = gun.transform.position + bulletDir * aimpointDist / 2;
         }
     }
 }
