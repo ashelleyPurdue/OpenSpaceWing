@@ -52,6 +52,9 @@ public class PlayerGunBehaviour : MonoBehaviour
             GameObject bullet = GameObject.Instantiate(bulletOriginal);
             bullet.transform.position = transform.TransformPoint(gunPos);
             bullet.GetComponent<Rigidbody>().velocity = bulletDir * bulletSpeed;
+
+            //Let the bullet know it was the player that created it.
+            bullet.GetComponent<DamageSource>().tags.Add(DamageTag.fromPlayer);
         }
     }
 
