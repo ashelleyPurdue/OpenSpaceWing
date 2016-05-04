@@ -18,12 +18,19 @@ public class PlayerGunBehaviour : MonoBehaviour
         get { return aimPointNormal; }
     }
 
+    public Transform TargettedObject
+    {
+        get { return targettedObject; }
+    }
+
+
     //Private fields
     private Vector3 gunPos = Vector3.zero;  //Position of the gun in local space
     private GameObject bulletOriginal;
 
     private Vector3 aimPoint = Vector3.zero;
     private Vector3 aimPointNormal = Vector3.forward;
+    private Transform targettedObject = null;
 
     private float bulletSpeed = 50f;
 
@@ -70,8 +77,6 @@ public class PlayerGunBehaviour : MonoBehaviour
         mousePos.x = Mathf.InverseLerp(0, Screen.width, Input.mousePosition.x);
         mousePos.y = Mathf.InverseLerp(0, Screen.height, Input.mousePosition.y);
 
-        Debug.Log(mousePos);
-
         //Cast a ray
         Ray ray = Camera.main.ViewportPointToRay(mousePos);
         RaycastHit[] hits = Physics.RaycastAll(ray, MAX_DIST);
@@ -81,26 +86,24 @@ public class PlayerGunBehaviour : MonoBehaviour
         {
             aimPoint = ray.GetPoint(MAX_DIST);
             aimPointNormal = Vector3.forward;
+            targettedObject = null;
             return;
         }
 
         //Choose the point closest to the camera
-        Vector3 closestPont = Vector3.zero;
-        Vector3 closestNormal = Vector3.zero;
-        float closestDist = float.MaxValue;
+        RaycastHit closestHit = hits[0];
 
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].distance < closestDist)
+            if (hits[i].distance < closestHit.distance)
             {
-                closestDist = hits[i].distance;
-                closestPont = hits[i].point;
-                closestNormal = hits[i].normal;
+                closestHit = hits[i];
             }
         }
 
         //Return the closest point
-        aimPoint = closestPont;
-        aimPointNormal = closestNormal;
+        aimPoint = closestHit.point;
+        aimPointNormal = closestHit.normal;
+        targettedObject = closestHit.transform;
     }
 }
