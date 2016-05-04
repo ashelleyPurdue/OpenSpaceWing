@@ -29,6 +29,7 @@ public class PlayerGunBehaviour : MonoBehaviour
     //Private fields
     private Vector3 gunPos = Vector3.zero;  //Position of the gun in local space
     private GameObject bulletOriginal;
+    private DamageSource damageSrc;
 
     private Vector3 aimPoint = Vector3.zero;
     private Vector3 aimPointNormal = Vector3.forward;
@@ -39,6 +40,7 @@ public class PlayerGunBehaviour : MonoBehaviour
     void Awake()
     {
         bulletOriginal = Resources.Load<GameObject>("testBullet_prefab");
+        damageSrc = GetComponent<DamageSource>();
     }
 
     void Update()
@@ -60,8 +62,30 @@ public class PlayerGunBehaviour : MonoBehaviour
             bullet.transform.position = transform.TransformPoint(gunPos);
             bullet.GetComponent<Rigidbody>().velocity = bulletDir * BULLET_SPEED;
 
-            //Let the bullet know it was the player that created it.
-            bullet.GetComponent<DamageSource>().tags.Add(DamageTag.fromPlayer);
+            //Do a raycast so we can damage the object being shot at.
+            Ray ray = new Ray(transform.position, (aimPoint - transform.position).normalized);
+            RaycastHit[] hits = Physics.SphereCastAll(ray, SPHERECAST_RADIUS, Vector3.Distance(transform.position, aimPoint));
+
+            Transform hitObject = null;
+            float closestDist = float.MaxValue;
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.distance < closestDist)
+                {
+                    hitObject = hit.transform;
+                    closestDist = hit.distance;
+                }
+            }
+
+            //Deal damage to the object hit, if it has health points
+            if (hitObject != null)
+            {
+                HealthPoints targetHP = hitObject.GetComponent<HealthPoints>();
+                if (targetHP != null)
+                {
+                    targetHP.AttackFrom(damageSrc);
+                }
+            }
         }
     }
 
