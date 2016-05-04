@@ -5,7 +5,9 @@ public class PlayerGunBehaviour : MonoBehaviour
 {
     //Constants
     public const float MAX_DIST = 50;
-    public const float SPHERECAST_RADIUS = 0.2f;
+    public const float SCREEN_SPHERECAST_RADIUS = 0.15f;
+    public const float BULLET_SPHERECAST_RADIUS = 0.2f;
+
     public const float BULLET_SPEED = 100f;
 
 
@@ -54,43 +56,40 @@ public class PlayerGunBehaviour : MonoBehaviour
         //Shoot a lazer where the player is aiming
         if (Input.GetButtonDown("Fire1"))
         {
-            //Find the direction the bullet should travel in
-            Vector3 bulletDir = (aimPoint - transform.TransformPoint(gunPos)).normalized;
-
-            //Fire the bullet
-            GameObject bullet = GameObject.Instantiate(bulletOriginal);
-            bullet.transform.position = transform.TransformPoint(gunPos);
-            bullet.GetComponent<Rigidbody>().velocity = bulletDir * BULLET_SPEED;
-
-            //Do a raycast so we can damage the object being shot at.
-            Ray ray = new Ray(transform.position, (aimPoint - transform.position).normalized);
-            RaycastHit[] hits = Physics.SphereCastAll(ray, SPHERECAST_RADIUS, Vector3.Distance(transform.position, aimPoint));
-
-            Transform hitObject = null;
-            float closestDist = float.MaxValue;
-            foreach (RaycastHit hit in hits)
-            {
-                if (hit.distance < closestDist)
-                {
-                    hitObject = hit.transform;
-                    closestDist = hit.distance;
-                }
-            }
-
-            //Deal damage to the object hit, if it has health points
-            if (hitObject != null)
-            {
-                HealthPoints targetHP = hitObject.GetComponent<HealthPoints>();
-                if (targetHP != null)
-                {
-                    targetHP.AttackFrom(damageSrc);
-                }
-            }
+            Fire();
         }
     }
 
 
     //Misc methods
+
+    private void Fire()
+    {
+        //Fires the bullet
+
+        //Find the direction the bullet should travel in
+        Vector3 bulletDir = (aimPoint - transform.TransformPoint(gunPos)).normalized;
+
+        //Do a raycast so we can get the healthpoints of the object being fired at.
+        HealthPoints targetHP = null;
+        
+        Ray ray = new Ray(transform.position, (aimPoint - transform.position).normalized);
+        RaycastHit[] hits = Physics.SphereCastAll(ray, BULLET_SPHERECAST_RADIUS, Vector3.Distance(transform.position, aimPoint));
+
+        float closestDist = float.MaxValue;
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.distance < closestDist)
+            {
+                targetHP = hit.transform.GetComponent<HealthPoints>();
+                closestDist = hit.distance;
+            }
+        }
+
+        //Create the bullet and fire it.
+        TargettedBulletBehaviour bullet = TargettedBulletBehaviour.Create(transform.position, targetHP, damageSrc, closestDist / BULLET_SPEED);
+        bullet.myRigidbody.AddForce(bulletDir * BULLET_SPEED, ForceMode.VelocityChange);
+    }
 
     private void UpdateAimPoint()
     {
@@ -103,7 +102,7 @@ public class PlayerGunBehaviour : MonoBehaviour
 
         //Do a spherecast.
         Ray ray = Camera.main.ViewportPointToRay(mousePos);
-        RaycastHit[] hits = Physics.SphereCastAll(ray, SPHERECAST_RADIUS, MAX_DIST);
+        RaycastHit[] hits = Physics.SphereCastAll(ray, SCREEN_SPHERECAST_RADIUS, MAX_DIST);
 
         //If no hits were found, just set it to the maximum distance
         if (hits.Length == 0)
