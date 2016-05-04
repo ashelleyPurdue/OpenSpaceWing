@@ -5,6 +5,8 @@ public class PlayerGunBehaviour : MonoBehaviour
 {
     //Constants
     public const float MAX_DIST = 50;
+    public const float SPHERECAST_RADIUS = 0.2f;
+    public const float BULLET_SPEED = 100f;
 
 
     //Properties
@@ -32,8 +34,6 @@ public class PlayerGunBehaviour : MonoBehaviour
     private Vector3 aimPointNormal = Vector3.forward;
     private Transform targettedObject = null;
 
-    private float bulletSpeed = 50f;
-
 
     //Events
     void Awake()
@@ -58,7 +58,7 @@ public class PlayerGunBehaviour : MonoBehaviour
             //Fire the bullet
             GameObject bullet = GameObject.Instantiate(bulletOriginal);
             bullet.transform.position = transform.TransformPoint(gunPos);
-            bullet.GetComponent<Rigidbody>().velocity = bulletDir * bulletSpeed;
+            bullet.GetComponent<Rigidbody>().velocity = bulletDir * BULLET_SPEED;
 
             //Let the bullet know it was the player that created it.
             bullet.GetComponent<DamageSource>().tags.Add(DamageTag.fromPlayer);
@@ -77,9 +77,9 @@ public class PlayerGunBehaviour : MonoBehaviour
         mousePos.x = Mathf.InverseLerp(0, Screen.width, Input.mousePosition.x);
         mousePos.y = Mathf.InverseLerp(0, Screen.height, Input.mousePosition.y);
 
-        //Cast a ray
+        //Do a spherecast.
         Ray ray = Camera.main.ViewportPointToRay(mousePos);
-        RaycastHit[] hits = Physics.RaycastAll(ray, MAX_DIST);
+        RaycastHit[] hits = Physics.SphereCastAll(ray, SPHERECAST_RADIUS, MAX_DIST);
 
         //If no hits were found, just set it to the maximum distance
         if (hits.Length == 0)
