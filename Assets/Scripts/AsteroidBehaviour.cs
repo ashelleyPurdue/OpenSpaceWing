@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AsteroidBehaviour : MonoBehaviour
 {
-    public const float MIN_SIZE = 0.25f;
+    public const float MIN_SIZE = 0.5f;
 
     public const float DESTROY_FORCE = 100f;
     public const float SPLIT_DISTANCE = 0.5f;
