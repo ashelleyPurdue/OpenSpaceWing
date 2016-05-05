@@ -277,18 +277,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 21200240, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 21200240, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
-      propertyPath: m_Color.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 21200240, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
   m_IsPrefabParent: 0
@@ -354,26 +342,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 835799642}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1288873598 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 101368, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
-  m_PrefabInternal: {fileID: 773252823}
---- !u!114 &1288873601
+--- !u!114 &1288873601 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1288873598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
+  m_PrefabParentObject: {fileID: 11463998, guid: 2be27edc4dd64c64ba1a9980c8a21c1e,
+    type: 2}
+  m_PrefabInternal: {fileID: 773252823}
   m_Script: {fileID: 11500000, guid: 7cd9c31318eeb154e8d997b4f9160372, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tags: 00000000
-  ignoreList: []
-  damageAmount: 1
-  isHot: 1
-  useDefaultHitDetection: 0
 --- !u!1 &1322215083
 GameObject:
   m_ObjectHideFlags: 0
