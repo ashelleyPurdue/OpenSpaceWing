@@ -15,6 +15,9 @@ public class PlayerBehaviour : MonoBehaviour
         MovementControls();
         Rotate();
 
+        //Move forward
+        transform.position += transform.forward * forwardSpeed * Time.deltaTime;
+
         //Close game when pressing escape
         if (Input.GetButtonDown("Cancel"))
         {
