@@ -7,16 +7,12 @@ public class PlayerBehaviour : MonoBehaviour
     public Transform model;
 
     private float strafeSpeed = 50;
-    private float forwardSpeed = 50;
     private float rotSpeed = 90f;
 
     void Update()
     {
         MovementControls();
         Rotate();
-
-        //Move forward
-        transform.position += transform.forward * forwardSpeed * Time.deltaTime;
 
         //Close game when pressing escape
         if (Input.GetButtonDown("Cancel"))
@@ -39,7 +35,6 @@ public class PlayerBehaviour : MonoBehaviour
     {
         //Get the direction the ship's movement wants to point
         Vector3 moveDir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-        moveDir.z = forwardSpeed;
         moveDir.Normalize();
 
         //Get the direction the gun wants the ship to point

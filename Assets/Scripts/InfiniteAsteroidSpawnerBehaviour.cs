@@ -28,7 +28,7 @@ public class InfiniteAsteroidSpawnerBehaviour : MonoBehaviour
 
     void Awake()
     {
-        nextAsteroidZ = player.position.z + Random.RandomRange(minInterval, maxInterval);
+        nextAsteroidZ = player.position.z + Random.Range(minInterval, maxInterval);
     }
 
     void FixedUpdate()
@@ -37,18 +37,18 @@ public class InfiniteAsteroidSpawnerBehaviour : MonoBehaviour
         if (player.position.z >= nextAsteroidZ)
         {
             //Advance the next Z
-            nextAsteroidZ += Random.RandomRange(minInterval, maxInterval);
+            nextAsteroidZ += Random.Range(minInterval, maxInterval);
 
             //Select a random position to put the asteroid
             Vector3 newPos = Vector3.zero;
-            newPos.x = Random.RandomRange(minX, maxX);
-            newPos.y = Random.RandomRange(minY, maxY);
+            newPos.x = Random.Range(minX, maxX);
+            newPos.y = Random.Range(minY, maxY);
             newPos.z = player.position.z + spawnDistance;
 
             //Create the asteroid
             GameObject asteroid = Instantiate<GameObject>(Resources.Load<GameObject>("asteroid_prefab"));
             asteroid.transform.position = newPos;
-            asteroid.transform.localScale = Vector3.one * Random.RandomRange(minScale, maxScale);
+            asteroid.transform.localScale = Vector3.one * Random.Range(minScale, maxScale);
         }
     }
 }
