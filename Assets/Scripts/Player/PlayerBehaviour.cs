@@ -3,11 +3,27 @@ using System.Collections;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    public const float OFFICIAL_FOV = 60f;           //The "official" FOV, used for calculating movement bounds
+    public const float OFFICIAL_ASPECT = 16f / 9f;   //The "official" aspect ratio, used for calculating movement bounds.
+
     public PlayerGunBehaviour gun;
     public Transform model;
 
+    private float xWidth;
+    private float yWidth;
+
     private float strafeSpeed = 10;
     private float rotSpeed = 90f;
+
+
+    //Events
+
+    void Awake()
+    {
+        //Calculate the min/max x and y
+        yWidth = transform.localPosition.z * Mathf.Tan(OFFICIAL_FOV * 0.5f * Mathf.Deg2Rad);
+        xWidth = yWidth * OFFICIAL_ASPECT;
+    }
 
     void Update()
     {
@@ -22,13 +38,30 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
+
     //Misc methods
 
     private void MovementControls()
     {
-        //Move
+        //Find the new position
+        Vector3 pos = transform.localPosition;
+
         Vector3 dir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-        transform.position += dir.normalized * strafeSpeed * Time.deltaTime;
+        pos += dir.normalized * strafeSpeed * Time.deltaTime;
+
+        //Keep the ship in-bounds
+        if (Mathf.Abs(pos.x) > xWidth)
+        {
+            pos.x = xWidth * Mathf.Sign(pos.x);
+        }
+
+        if (Mathf.Abs(pos.y) > yWidth)
+        {
+            pos.y = yWidth * Mathf.Sign(pos.y);
+        }
+
+        //Update the position
+        transform.localPosition = pos;
     }
 
     private void Rotate()
