@@ -6,7 +6,7 @@ public class PlayerBehaviour : MonoBehaviour
     public PlayerGunBehaviour gun;
     public Transform model;
 
-    private float strafeSpeed = 50;
+    private float strafeSpeed = 10;
     private float rotSpeed = 90f;
 
     void Update()
