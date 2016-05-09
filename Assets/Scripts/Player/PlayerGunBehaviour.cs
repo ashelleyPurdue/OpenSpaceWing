@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerGunBehaviour : MonoBehaviour
 {
     //Constants
-    public const float MAX_DIST = 100;
+    public const float MAX_DIST = 500;
     public const float SCREEN_SPHERECAST_RADIUS = 0.15f;
     public const float BULLET_SPHERECAST_RADIUS = 0.2f;
 

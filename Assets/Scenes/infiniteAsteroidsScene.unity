@@ -205,13 +205,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 655927262}
-  spawnDistance: 100
-  minX: -20
-  maxX: 20
-  minY: -20
-  maxY: 20
+  spawnDistance: 500
+  minX: -100
+  maxX: 100
+  minY: -100
+  maxY: 100
   minScale: 1
-  maxScale: 2
+  maxScale: 10
   minInterval: 5
   maxInterval: 20
 --- !u!4 &1558719924
@@ -337,6 +337,14 @@ Prefab:
     - target: {fileID: 415530, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 434334, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 434334, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2be27edc4dd64c64ba1a9980c8a21c1e, type: 2}
