@@ -126,9 +126,9 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
         }
         else
         {
-            //If no point was found(IE: player aiming off into the distance), go half-way between the gun and the aim point
+            //If no point was found(IE: player aiming off into the distance), move to the aim point
             Vector3 normal = (gun.AimPoint - gun.transform.position).normalized;
-            Vector3 pos = gun.transform.position + bulletDir * aimpointDist / 2;
+            Vector3 pos = gun.transform.position + bulletDir * aimpointDist;
             UpdateCrosshair(hitCrosshair, null, pos, normal);
         }
     }
