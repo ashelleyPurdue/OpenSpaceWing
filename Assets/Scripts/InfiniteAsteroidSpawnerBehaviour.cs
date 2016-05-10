@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class InfiniteAsteroidSpawnerBehaviour : MonoBehaviour
 {
@@ -22,17 +23,36 @@ public class InfiniteAsteroidSpawnerBehaviour : MonoBehaviour
 
     //Private fields
     private float nextAsteroidZ;
-
+    private float lastPlayerZ;
 
     //Events
 
     void Awake()
     {
         nextAsteroidZ = player.position.z + Random.Range(minInterval, maxInterval);
+        lastPlayerZ = player.position.z;
     }
 
     void FixedUpdate()
     {
+        //Reset the next asteroid z if the player moved backwards
+        if (player.position.z < lastPlayerZ)
+        {
+            nextAsteroidZ = player.position.z + Random.Range(minInterval, maxInterval);
+
+            //Destroy all asteroids
+            GameObject[] allObjs = GameObject.FindObjectsOfType<GameObject>();
+            foreach (GameObject go in allObjs)
+            {
+                if (go.GetComponent<AsteroidBehaviour>() != null)
+                {
+                    GameObject.Destroy(go);
+                }
+            }
+
+        }
+        lastPlayerZ = player.position.z;
+
         //Create an asteroid when the player crosses the current threshold
         if (player.position.z >= nextAsteroidZ)
         {
