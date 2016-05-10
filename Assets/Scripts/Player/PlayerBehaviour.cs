@@ -30,10 +30,9 @@ public class PlayerBehaviour : MonoBehaviour
         MovementControls();
         Rotate();
 
-        //Close game when pressing escape
+        //Show the cursor when pressing esc.
         if (Input.GetButtonDown("Cancel"))
         {
-            Application.Quit();
             Cursor.visible = true;
         }
     }

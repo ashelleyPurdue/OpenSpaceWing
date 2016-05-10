@@ -9,11 +9,13 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
     public const float ROTATION_CUTOFF_DISTANCE = 2f;      //The crosshair will not rotate when targetting objects this far away.
 
     //Global settings
-    public static bool enableHitCrosshair = false;
-
+    public static bool enableHitCrosshair = true;
+    public static bool enableAimCrosshair = false;
+    public static bool enabledCursor = true;
 
     //References
     public PlayerGunBehaviour gun;
+    public Texture2D cursor;
     public Transform hitCrosshair;
     public Transform aimCrosshair;
 
@@ -30,6 +32,15 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
 
         //Un-parent the crosshair object
         hitCrosshair.SetParent(null);
+
+        //Set the cursor
+        if (enabledCursor)
+        {
+            Vector2 center = new Vector2(cursor.width, cursor.height);
+            center *= 0.5f;
+
+            Cursor.SetCursor(cursor, center, CursorMode.Auto);
+        }
     }
 
     void Update()
@@ -39,7 +50,11 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
         line.SetPosition(1, gun.AimPoint);
 
         //Update the aim crosshair
-        UpdateCrosshair(aimCrosshair, gun.TargettedObject, gun.AimPoint, gun.AimPointNormal);
+        aimCrosshair.GetComponent<SpriteRenderer>().enabled = enableAimCrosshair;
+        if (enableAimCrosshair)
+        {
+            UpdateCrosshair(aimCrosshair, gun.TargettedObject, gun.AimPoint, gun.AimPointNormal);
+        }
 
         //Update the hit crosshair
         hitCrosshair.GetComponent<SpriteRenderer>().enabled = enableHitCrosshair;
@@ -48,7 +63,11 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
 
     void OnApplicationFocus(bool status)
     {
-        Cursor.visible = !status;
+        //If the cursor is not enabled, hide the cursor when the application is in focus
+        if (!enabledCursor)
+        {
+            Cursor.visible = !status;
+        }
     }
     
 
