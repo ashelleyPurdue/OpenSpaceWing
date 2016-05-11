@@ -33,3 +33,4 @@ Thumbs.db
 #====Others====#
 binaries/
 .vscode/launch.json
+build/
