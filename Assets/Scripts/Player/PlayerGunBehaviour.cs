@@ -8,7 +8,11 @@ public class PlayerGunBehaviour : MonoBehaviour
     public const float SCREEN_SPHERECAST_RADIUS = 0.15f;
     public const float BULLET_SPHERECAST_RADIUS = 0.2f;
 
-    public const float BULLET_SPEED = 200f;
+    public const float BULLET_SPEED = 500f;
+
+
+    //Config toggles
+    public static bool useTargettedBullets = false;
 
 
     //Properties
@@ -87,8 +91,27 @@ public class PlayerGunBehaviour : MonoBehaviour
         }
 
         //Create the bullet and fire it.
-        TargettedBulletBehaviour bullet = TargettedBulletBehaviour.Create(transform.position, targetHP, damageSrc, closestDist / BULLET_SPEED);
-        bullet.myRigidbody.AddForce(bulletDir * BULLET_SPEED, ForceMode.VelocityChange);
+        Rigidbody bulletRigidbody;
+        if (useTargettedBullets)
+        {
+            TargettedBulletBehaviour bullet = TargettedBulletBehaviour.Create(transform.position, targetHP, damageSrc, closestDist / BULLET_SPEED);
+            bulletRigidbody = bullet.myRigidbody;
+        }
+        else
+        {
+            //Create the bullet
+            GameObject bullet = Instantiate(Resources.Load<GameObject>("testBullet_prefab"));
+            bulletRigidbody = bullet.GetComponent<Rigidbody>();
+            bullet.transform.position = transform.position;
+
+            //Configure the damage source
+            DamageSource bulletSrc = bullet.AddComponent<DamageSource>();
+            bulletSrc.damageAmount = damageSrc.damageAmount;
+            bulletSrc.tags = damageSrc.tags;
+            bulletSrc.useDefaultHitDetection = true;
+        }
+
+        bulletRigidbody.AddForce(bulletDir * BULLET_SPEED, ForceMode.VelocityChange);
     }
 
     private void UpdateAimPoint()

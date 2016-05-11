@@ -23,7 +23,7 @@ public abstract class AbstractHealthPoints : MonoBehaviour
         //Returns if this object is vulnerable to the given damage source according to only the vulnerability lists.
 
         //If the src's tags are empty, log a warning and return true.
-        if (src.tags.Count <= 0)
+        if (src.tags == null || src.tags.Count <= 0)
         {
             Debug.LogError("ERROR: " + src.name + "'s damage source has no DamageTags.  Please fix this.");
         }
