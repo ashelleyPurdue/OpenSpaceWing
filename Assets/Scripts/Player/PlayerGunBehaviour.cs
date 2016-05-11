@@ -105,7 +105,7 @@ public class PlayerGunBehaviour : MonoBehaviour
             bullet.transform.position = transform.position;
 
             //Configure the damage source
-            DamageSource bulletSrc = bullet.AddComponent<DamageSource>();
+            DamageSource bulletSrc = bullet.GetComponent<DamageSource>();
             bulletSrc.damageAmount = damageSrc.damageAmount;
             bulletSrc.tags = damageSrc.tags;
             bulletSrc.useDefaultHitDetection = true;
