@@ -9,7 +9,7 @@ public class PlayerGunBehaviour : MonoBehaviour
     public const float BULLET_SPHERECAST_RADIUS = 0.2f;
 
     public const float BULLET_SPEED = 500f;
-
+    public const float FIRE_RATE = 10;       //Bullets per second
 
     //Config toggles
     public static bool useTargettedBullets = false;
@@ -41,6 +41,8 @@ public class PlayerGunBehaviour : MonoBehaviour
     private Vector3 aimPointNormal = Vector3.forward;
     private Transform targettedObject = null;
 
+    private float repeatFireTimer = 10;
+
 
     //Events
     void Awake()
@@ -58,9 +60,23 @@ public class PlayerGunBehaviour : MonoBehaviour
         transform.LookAt(aimPoint);
 
         //Shoot a lazer where the player is aiming
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1"))
         {
-            Fire();
+            //Fire if timer is up
+            if (repeatFireTimer <= 0)
+            {
+                Fire();
+                repeatFireTimer = 1f / FIRE_RATE;
+                Debug.Log("repeat fire timer: " + repeatFireTimer);
+            }
+
+            //Increment the timer
+            repeatFireTimer -= Time.deltaTime;
+        }
+        else
+        {
+            //Clear the timer
+            repeatFireTimer = 0;
         }
     }
 
