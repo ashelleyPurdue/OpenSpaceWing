@@ -128,10 +128,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 11421018, guid: 89b0f3060479c9d4f87a6e72637154d6, type: 2}
-      propertyPath: damageSrc
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 89b0f3060479c9d4f87a6e72637154d6, type: 2}
   m_IsPrefabParent: 0
