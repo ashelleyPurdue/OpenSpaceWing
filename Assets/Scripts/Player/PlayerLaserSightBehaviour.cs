@@ -8,6 +8,9 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
     public const float FORWARD_OFFSET = 0.01f;
     public const float ROTATION_CUTOFF_DISTANCE = 2f;      //The crosshair will not rotate when targetting objects this far away.
 
+    public const float RAYCAST_RADIUS = 0.2f;       //How much leniency the raycast has
+
+
     //Global settings
     public static bool enableHitCrosshair = true;
     public static bool enableAimCrosshair = false;
@@ -102,7 +105,7 @@ public class PlayerLaserSightBehaviour : MonoBehaviour
         Vector3 bulletDir = (gun.AimPoint - gun.transform.position).normalized;
         float aimpointDist = Vector3.Distance(gun.AimPoint, gun.transform.position);
 
-        RaycastHit[] hits = Physics.RaycastAll(gun.transform.position, bulletDir, aimpointDist);
+        RaycastHit[] hits = Physics.SphereCastAll(gun.transform.position, RAYCAST_RADIUS, bulletDir, aimpointDist);
 
         bool foundHit = false;
         RaycastHit closestHit = new RaycastHit();

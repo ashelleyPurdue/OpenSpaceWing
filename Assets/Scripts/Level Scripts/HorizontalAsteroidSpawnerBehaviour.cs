@@ -9,8 +9,8 @@ public class HorizontalAsteroidSpawnerBehaviour : MonoBehaviour
     private float maxDist = 100;
     private float minDist = 2;
 
-    private float minSpeed = 5f;
-    private float maxSpeed = 30f;
+    private float minSpeed = 20f;
+    private float maxSpeed = 50f;
 
     private float createTime = 1f;
     private float createTimer = 0f;
