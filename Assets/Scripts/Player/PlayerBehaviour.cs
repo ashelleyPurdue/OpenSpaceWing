@@ -30,9 +30,10 @@ public class PlayerBehaviour : MonoBehaviour
         MovementControls();
         Rotate();
 
-        //Show the cursor when pressing esc.
+        //Quit when pressing esc
         if (Input.GetButtonDown("Cancel"))
         {
+            Application.Quit();
             Cursor.visible = true;
         }
     }
@@ -46,7 +47,8 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 pos = transform.localPosition;
 
         Vector3 dir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-        pos += dir.normalized * strafeSpeed * Time.deltaTime;
+        float percent = dir.magnitude / Mathf.Sqrt(2);
+        pos += dir.normalized * percent * strafeSpeed * Time.deltaTime;
 
         //Keep the ship in-bounds
         if (Mathf.Abs(pos.x) > xWidth)
