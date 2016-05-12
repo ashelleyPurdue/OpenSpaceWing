@@ -41,6 +41,9 @@ public class PlayerGunBehaviour : MonoBehaviour
     private Vector3 aimPointNormal = Vector3.forward;
     private Transform targettedObject = null;
 
+    private bool distanceLocked = false;
+    private float lockedDistance = MAX_DIST;
+
     private float repeatFireTimer = 10;
 
 
@@ -67,7 +70,6 @@ public class PlayerGunBehaviour : MonoBehaviour
             {
                 Fire();
                 repeatFireTimer = 1f / FIRE_RATE;
-                Debug.Log("repeat fire timer: " + repeatFireTimer);
             }
 
             //Increment the timer
@@ -134,6 +136,14 @@ public class PlayerGunBehaviour : MonoBehaviour
     {
         //Returns the point in world space that the player is aiming at.
 
+        //If the player is holding the "lock distance" button, use the locked distance.
+        //TODO: Rewrite this with distance locking in mind.
+        float dist = MAX_DIST;
+        if (distanceLocked)
+        {
+            dist = lockedDistance;
+        }
+
         //Transform the mouse position to a viewport point
         Vector3 mousePos = Vector3.zero;
         mousePos.x = Mathf.InverseLerp(0, Screen.width, Input.mousePosition.x);
@@ -143,29 +153,41 @@ public class PlayerGunBehaviour : MonoBehaviour
         Ray ray = Camera.main.ViewportPointToRay(mousePos);
         RaycastHit[] hits = Physics.SphereCastAll(ray, SCREEN_SPHERECAST_RADIUS, MAX_DIST);
 
-        //If no hits were found, just set it to the maximum distance
+        //If no hits were found, just set it to the maximum distance.  Else, use the closest point
+        float closestDist = dist;
+
         if (hits.Length == 0)
         {
-            aimPoint = ray.GetPoint(MAX_DIST);
+            aimPoint = ray.GetPoint(dist);
             aimPointNormal = Vector3.forward;
             targettedObject = null;
-            return;
         }
-
-        //Choose the point closest to the camera
-        RaycastHit closestHit = hits[0];
-
-        for (int i = 0; i < hits.Length; i++)
+        else
         {
-            if (hits[i].distance < closestHit.distance)
+            //Choose the point closest to the camera
+            RaycastHit closestHit = hits[0];
+
+            for (int i = 0; i < hits.Length; i++)
             {
-                closestHit = hits[i];
+                if (hits[i].distance < closestHit.distance)
+                {
+                    closestHit = hits[i];
+                }
             }
+
+            //"Return" the closest point
+            aimPoint = closestHit.point;
+            aimPointNormal = closestHit.normal;
+            targettedObject = closestHit.transform;
+
+            closestDist = closestHit.distance;
         }
 
-        //Return the closest point
-        aimPoint = closestHit.point;
-        aimPointNormal = closestHit.normal;
-        targettedObject = closestHit.transform;
+        //If the distance is not locked, save the lockedDistance
+        distanceLocked = Input.GetButton("Fire2");
+        if (!distanceLocked)
+        {
+            lockedDistance = closestDist;
+        }
     }
 }
