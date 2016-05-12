@@ -144,44 +144,7 @@ public class PlayerGunBehaviour : MonoBehaviour
             dist = lockedDistance;
         }
 
-        //Transform the mouse position to a viewport point
-        Vector3 mousePos = Vector3.zero;
-        mousePos.x = Mathf.InverseLerp(0, Screen.width, Input.mousePosition.x);
-        mousePos.y = Mathf.InverseLerp(0, Screen.height, Input.mousePosition.y);
-
-        //Do a spherecast.
-        Ray ray = Camera.main.ViewportPointToRay(mousePos);
-        RaycastHit[] hits = Physics.SphereCastAll(ray, SCREEN_SPHERECAST_RADIUS, MAX_DIST);
-
-        //If no hits were found, just set it to the maximum distance.  Else, use the closest point
-        float closestDist = dist;
-
-        if (hits.Length == 0)
-        {
-            aimPoint = ray.GetPoint(dist);
-            aimPointNormal = Vector3.forward;
-            targettedObject = null;
-        }
-        else
-        {
-            //Choose the point closest to the camera
-            RaycastHit closestHit = hits[0];
-
-            for (int i = 0; i < hits.Length; i++)
-            {
-                if (hits[i].distance < closestHit.distance)
-                {
-                    closestHit = hits[i];
-                }
-            }
-
-            //"Return" the closest point
-            aimPoint = closestHit.point;
-            aimPointNormal = closestHit.normal;
-            targettedObject = closestHit.transform;
-
-            closestDist = closestHit.distance;
-        }
+        float closestDist = RaycastForAimPoint(dist);
 
         //If the distance is not locked, save the lockedDistance
         distanceLocked = Input.GetButton("Fire2");
@@ -189,5 +152,51 @@ public class PlayerGunBehaviour : MonoBehaviour
         {
             lockedDistance = closestDist;
         }
+    }
+
+    private float RaycastForAimPoint(float maxDist)
+    {
+        //Raycasts to find the aim point.
+        //Returns the raycasthit's distance
+
+        //Transform the mouse position to a viewport point
+        Vector3 mousePos = Vector3.zero;
+        mousePos.x = Mathf.InverseLerp(0, Screen.width, Input.mousePosition.x);
+        mousePos.y = Mathf.InverseLerp(0, Screen.height, Input.mousePosition.y);
+
+        //Do a spherecast.
+        Ray ray = Camera.main.ViewportPointToRay(mousePos);
+        RaycastHit[] hits = Physics.SphereCastAll(ray, SCREEN_SPHERECAST_RADIUS, maxDist);
+
+        //If no hits were found, just set it to the maximum distance.  Else, use the closest point
+        if (hits.Length == 0)
+        {
+            //"Return" the point at the end of the ray.
+            aimPoint = ray.GetPoint(maxDist);
+            aimPointNormal = Vector3.forward;
+            targettedObject = null;
+
+            //Return the distance
+            return maxDist;
+        }
+
+		//Choose the point closest to the camera
+		RaycastHit closestHit = hits[0];
+
+		for (int i = 0; i < hits.Length; i++)
+		{
+			if (hits[i].distance < closestHit.distance)
+			{
+				closestHit = hits[i];
+			}
+		}
+
+		//"Return" the closest point
+		aimPoint = closestHit.point;
+		aimPointNormal = closestHit.normal;
+		targettedObject = closestHit.transform;
+
+		//Return the distance
+		return closestHit.distance;
     }
 }
