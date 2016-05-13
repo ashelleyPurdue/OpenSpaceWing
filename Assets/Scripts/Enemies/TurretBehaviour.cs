@@ -30,6 +30,12 @@ public class TurretBehaviour : MonoBehaviour
         StartCoroutine(BehaviourLoop());
     }
 
+    void Update()
+    {
+        //Aim at the player
+        gun.LookAt(player);
+    }
+
 
     //Coroutines
 
