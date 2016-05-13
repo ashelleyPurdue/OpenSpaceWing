@@ -9,6 +9,7 @@ public class BulletBehaviour : MonoBehaviour
 
     private Vector3 lastPos;
     private Rigidbody myRigidbody;
+    private DamageSource damageSrc;
 
 
     //Static methods
@@ -45,6 +46,7 @@ public class BulletBehaviour : MonoBehaviour
     {
         lastPos = transform.position;
         myRigidbody = GetComponent<Rigidbody>();
+        damageSrc = GetComponent<DamageSource>();
     }
 
     void FixedUpdate()
@@ -79,6 +81,13 @@ public class BulletBehaviour : MonoBehaviour
 
         foreach(RaycastHit hit in hits)
         {
+            //Skip this hit if its HealthPoints are in the ignore list
+            HealthPoints hp = hit.collider.GetComponent<HealthPoints>();
+            if (hp != null && damageSrc.ignoreList.Contains(hp))
+            {
+                continue;
+            }
+
             if (hit.distance > furthestDist)
             {
                 furthestDist = hit.distance;
