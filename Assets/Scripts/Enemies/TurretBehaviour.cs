@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class TurretBehaviour : MonoBehaviour
 {
+    public const float BULLET_SPAWN_OFFSET = 2;
+
     public Transform gun;
 
     private float activationRange = 100;
@@ -12,7 +14,7 @@ public class TurretBehaviour : MonoBehaviour
     private float bulletDelay = 0.2f;
     private float delayAfterRound = 2f;
 
-    private float bulletVelocity = 20;
+    private float bulletVelocity = 50;
 
     private Transform playerRig;
     private Transform player;
@@ -41,7 +43,7 @@ public class TurretBehaviour : MonoBehaviour
         lastPlayerRigPos = playerRig.position;
 
         //Aim at the player
-        gun.forward = PredictiveAim(1, playerSpeed);
+        gun.forward = PredictiveAim(playerSpeed);
     }
 
     void OnDead()
@@ -98,7 +100,7 @@ public class TurretBehaviour : MonoBehaviour
         return (viewportPoint.x >= 0 && viewportPoint.x <= 1) && (viewportPoint.y >= 0 && viewportPoint.y <= 1);
     }
 
-    private Vector3 PredictiveAim(float bulletSpawnOffset, float playerSpeed)
+    private Vector3 PredictiveAim(float playerSpeed)
     {
         //Aim at where the player is going to be.
         //Returns the forward vector.
@@ -111,7 +113,7 @@ public class TurretBehaviour : MonoBehaviour
         Vector3 closestForward = Vector3.up;
         float closestDist = float.MaxValue;
 
-        for (float offset = 0; offset <= activationRange; offset += INCREMENT)
+        for (float offset = 0; offset <= 10; offset += INCREMENT)
         {
             //Find where the bullet is aiming for
             Vector3 aimPoint = player.position + playerRig.forward * offset;
@@ -120,7 +122,7 @@ public class TurretBehaviour : MonoBehaviour
             Vector3 gunForward = (aimPoint - gun.transform.position).normalized;
 
             //Find the time it would take for the bullet to reach aimPoint
-            Vector3 bulletSpawnPos = gun.position + gunForward * bulletSpawnOffset;
+            Vector3 bulletSpawnPos = gun.position + gunForward * BULLET_SPAWN_OFFSET;
             float bulletTravelDist = Vector3.Distance(bulletSpawnPos, aimPoint);
             float time = bulletTravelDist / bulletVelocity;
 
