@@ -6,11 +6,11 @@ public class TurretBehaviour : MonoBehaviour
 {
     public Transform gun;
 
-    private float activationRange = 50;
+    private float activationRange = 100;
 
     private int bulletsPerRound = 3;
     private float bulletDelay = 0.2f;
-    private float delayAfterRound = 4f;
+    private float delayAfterRound = 2f;
 
     private float bulletVelocity = 20;
 
@@ -97,12 +97,13 @@ public class TurretBehaviour : MonoBehaviour
         //TODO: Use math to do this, instead of brute force
 
         const float INCREMENT = 0.5f;
+        const float FORWARD_OFFSET = 2;     //The final aim point will be pushed forward by this much.
 
         //Find the zOffset that, when used, will cause the bullet to get as close as possible to the player
         Vector3 closestForward = Vector3.up;
         float closestDist = float.MaxValue;
 
-        for (float offset = 0; offset <= 10; offset += INCREMENT)
+        for (float offset = 0; offset <= activationRange; offset += INCREMENT)
         {
             //Find where the bullet is aiming for
             Vector3 aimPoint = player.position + playerRig.forward * offset;
@@ -116,8 +117,8 @@ public class TurretBehaviour : MonoBehaviour
             float time = bulletTravelDist / bulletVelocity;
 
             //Find where the player will be at that point in time.
-            Vector3 predictedPlayerPos = player.position;
-            predictedPlayerPos.z += playerSpeed * time;
+            Vector3 predictedPlayerPos = player.position + playerRig.forward * playerSpeed * time;
+            predictedPlayerPos += playerRig.forward * FORWARD_OFFSET;
 
             //Save this forward if it's the closest
             float forwardDist = Vector3.Distance(aimPoint, predictedPlayerPos);
