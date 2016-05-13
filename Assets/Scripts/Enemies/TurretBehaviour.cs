@@ -19,6 +19,7 @@ public class TurretBehaviour : MonoBehaviour
 
     private Vector3 lastPlayerRigPos;
 
+
     //Events
 
     void Awake()
@@ -96,17 +97,15 @@ public class TurretBehaviour : MonoBehaviour
         //TODO: Use math to do this, instead of brute force
 
         const float INCREMENT = 0.5f;
-        const float PLAYER_SPEED_PLACEHOLDER = 5f;
 
         //Find the zOffset that, when used, will cause the bullet to get as close as possible to the player
         Vector3 closestForward = Vector3.up;
         float closestDist = float.MaxValue;
 
-        for (float zOffset = 0; zOffset <= 10; zOffset += INCREMENT)
+        for (float offset = 0; offset <= 10; offset += INCREMENT)
         {
             //Find where the bullet is aiming for
-            Vector3 aimPoint = player.position;
-            aimPoint.z += PLAYER_SPEED_PLACEHOLDER;
+            Vector3 aimPoint = player.position + playerRig.forward * offset;
 
             //Find the forward that points to the aimPoint
             Vector3 gunForward = (aimPoint - gun.transform.position).normalized;
