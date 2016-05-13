@@ -225,7 +225,7 @@ MonoBehaviour:
   ignoreList: []
   cooldownTime: 0
   useDefaultHitDetection: 1
-  maxHealth: 3
+  maxHealth: 1
 --- !u!114 &11490676
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -44,6 +44,14 @@ public class TurretBehaviour : MonoBehaviour
         gun.forward = PredictiveAim(1, playerSpeed);
     }
 
+    void OnDead()
+    {
+        //Destroy when dead
+        //TODO: Play sound/create explosion, increase score
+
+        GameObject.Destroy(gameObject);
+    }
+
 
     //Coroutines
 
