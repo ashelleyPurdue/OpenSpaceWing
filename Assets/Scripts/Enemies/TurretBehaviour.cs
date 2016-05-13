@@ -17,6 +17,7 @@ public class TurretBehaviour : MonoBehaviour
     private Transform playerRig;
     private Transform player;
 
+    private Vector3 lastPlayerRigPos;
 
     //Events
 
@@ -26,14 +27,20 @@ public class TurretBehaviour : MonoBehaviour
         playerRig = GameObject.FindObjectOfType<PlayerRigBehaviour>().transform;
         player = GameObject.FindObjectOfType<PlayerBehaviour>().transform;
 
+        lastPlayerRigPos = playerRig.position;
+
         //Start the co-routine
         StartCoroutine(BehaviourLoop());
     }
 
     void Update()
     {
+        //Compute the player rig's speed.
+        float playerSpeed = Vector3.Distance(lastPlayerRigPos, playerRig.position) / Time.deltaTime;
+        lastPlayerRigPos = playerRig.position;
+
         //Aim at the player
-        gun.LookAt(player);
+        gun.forward = PredictiveAim(1, playerSpeed);
     }
 
 
@@ -81,4 +88,49 @@ public class TurretBehaviour : MonoBehaviour
         Vector2 viewportPoint = Camera.main.WorldToViewportPoint(transform.position);
         return (viewportPoint.x >= 0 && viewportPoint.x <= 1) && (viewportPoint.y >= 0 && viewportPoint.y <= 1);
     }
+
+    private Vector3 PredictiveAim(float bulletSpawnOffset, float playerSpeed)
+    {
+        //Aim at where the player is going to be.
+        //Returns the forward vector.
+        //TODO: Use math to do this, instead of brute force
+
+        const float INCREMENT = 0.5f;
+        const float PLAYER_SPEED_PLACEHOLDER = 5f;
+
+        //Find the zOffset that, when used, will cause the bullet to get as close as possible to the player
+        Vector3 closestForward = Vector3.up;
+        float closestDist = float.MaxValue;
+
+        for (float zOffset = 0; zOffset <= 10; zOffset += INCREMENT)
+        {
+            //Find where the bullet is aiming for
+            Vector3 aimPoint = player.position;
+            aimPoint.z += PLAYER_SPEED_PLACEHOLDER;
+
+            //Find the forward that points to the aimPoint
+            Vector3 gunForward = (aimPoint - gun.transform.position).normalized;
+
+            //Find the time it would take for the bullet to reach aimPoint
+            Vector3 bulletSpawnPos = gun.position + gunForward * bulletSpawnOffset;
+            float bulletTravelDist = Vector3.Distance(bulletSpawnPos, aimPoint);
+            float time = bulletTravelDist / bulletVelocity;
+
+            //Find where the player will be at that point in time.
+            Vector3 predictedPlayerPos = player.position;
+            predictedPlayerPos.z += playerSpeed * time;
+
+            //Save this forward if it's the closest
+            float forwardDist = Vector3.Distance(aimPoint, predictedPlayerPos);
+            if (forwardDist < closestDist)
+            {
+                closestForward = gunForward;
+                closestDist = forwardDist;
+            }
+        }
+
+        //Return the forward
+        return closestForward;
+    }
+
 }
