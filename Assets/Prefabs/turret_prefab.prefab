@@ -27,6 +27,8 @@ GameObject:
   - 4: {fileID: 456538}
   - 65: {fileID: 6563532}
   - 114: {fileID: 11463692}
+  - 114: {fileID: 11455784}
+  - 114: {fileID: 11490676}
   m_Layer: 0
   m_Name: turret_prefab
   m_TagString: Untagged
@@ -195,6 +197,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.5, z: 1}
   m_Center: {x: 0, y: 0.25, z: 0}
+--- !u!114 &11455784
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 120774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de1ee13030f800043a07642da53b0e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gun: {fileID: 475556}
 --- !u!114 &11463692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -212,6 +226,23 @@ MonoBehaviour:
   cooldownTime: 0
   useDefaultHitDetection: 1
   maxHealth: 3
+--- !u!114 &11490676
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 120774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cd9c31318eeb154e8d997b4f9160372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tags: 01000000
+  ignoreList:
+  - {fileID: 11463692}
+  damageAmount: 1
+  isHot: 0
+  useDefaultHitDetection: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -4,11 +4,15 @@ using System.Collections.Generic;
 
 public class TurretBehaviour : MonoBehaviour
 {
+    public Transform gun;
+
     private float activationRange = 50;
 
     private int bulletsPerRound = 3;
     private float bulletDelay = 0.2f;
     private float delayAfterRound = 4f;
+
+    private float bulletVelocity = 20;
 
     private Transform playerRig;
     private Transform player;
@@ -49,8 +53,8 @@ public class TurretBehaviour : MonoBehaviour
             //Fire bullets
             for (int i = 0; i < bulletsPerRound; i++)
             {
-                //TODO: Fire the bullet
-                Debug.Log("Firing bullet " + i);
+                //Fire the bullet
+                BulletBehaviour.Create(transform.position + gun.forward, gun.forward, bulletVelocity, GetComponent<DamageSource>());
 
                 //Wait the delay
                 yield return new WaitForSeconds(bulletDelay);

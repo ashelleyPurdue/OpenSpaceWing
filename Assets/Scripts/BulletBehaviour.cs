@@ -3,10 +3,40 @@ using System.Collections;
 
 public class BulletBehaviour : MonoBehaviour
 {
+    public const string BULLET_PREFAB = "testBullet_prefab";
+
     private float lifeTime = 5f;
 
     private Vector3 lastPos;
     private Rigidbody myRigidbody;
+
+
+    //Static methods
+
+    public static BulletBehaviour Create(Vector3 position, Vector3 forward, float velocity, DamageSource damageSrc)
+    {
+        //Instantiate the bullet prefab
+        GameObject bullet = Instantiate(Resources.Load<GameObject>(BULLET_PREFAB));
+
+        //Configure the position and rotation
+        bullet.transform.position = position;
+        bullet.transform.forward = forward;
+
+        //Apply the velocity
+        bullet.GetComponent<Rigidbody>().AddForce(forward * velocity, ForceMode.VelocityChange);
+
+        //Configure the damage source
+        DamageSource bulletSrc = bullet.GetComponent<DamageSource>();
+        bulletSrc.useDefaultHitDetection = true;
+        bulletSrc.isHot = true;
+
+        bulletSrc.damageAmount = damageSrc.damageAmount;
+        bulletSrc.tags = damageSrc.tags;
+        bulletSrc.ignoreList = damageSrc.ignoreList;
+
+        //Return the bullet behaviour
+        return bullet.GetComponent<BulletBehaviour>();
+    }
 
 
     //Events
